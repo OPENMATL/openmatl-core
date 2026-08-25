@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>OpenMat Documentation</title>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --bg-panel: rgba(22, 27, 34, 0.7);
+      --border: #30363d;
+      --text: #c9d1d9;
+      --accent: #58a6ff;
+      --cyan: #00f2fe;
+      --blue: #4facfe;
+    }
+    
+    * { box-sizing: border-box; }
+    
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', -apple-system, sans-serif;
+      margin: 0;
+      line-height: 1.6;
+    }
+    
+    header {
+      padding: 40px;
+      background: radial-gradient(circle at center, #161b22 0%, var(--bg) 100%);
+      border-bottom: 1px solid var(--border);
+      text-align: center;
+    }
+    
+    header h1 {
+      margin: 0;
+      font-size: 3rem;
+      background: linear-gradient(90deg, var(--cyan), var(--blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    header p {
+      color: #8b949e;
+      font-size: 1.2rem;
+      margin-top: 10px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    h2 {
+      color: var(--text);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 10px;
+      margin-top: 40px;
+    }
+
+    h3 {
+      color: var(--accent);
+      margin-top: 30px;
+    }
+
+    p, li {
+      color: #8b949e;
+      font-size: 1.05rem;
+    }
+
+    .code-block {
+      background: #010409;
+      padding: 15px;
+      border-radius: 8px;
+      font-family: 'JetBrains Mono', 'Courier New', monospace;
+      color: #e6edf3;
+      border: 1px solid var(--border);
+      overflow-x: auto;
+      margin: 15px 0;
+    }
+
+    .keyword { color: #ff7b72; }
+    .string { color: #a5d6ff; }
+    .comment { color: #8b949e; font-style: italic; }
+    .function { color: #d2a8ff; }
+
+    .callout {
+      background: rgba(88, 166, 255, 0.1);
+      border-left: 4px solid var(--accent);
+      padding: 15px;
+      border-radius: 0 8px 8px 0;
+      margin: 20px 0;
+    }
+    
+    footer {
+      text-align: center;
+      padding: 30px;
+      border-top: 1px solid var(--border);
+      margin-top: 60px;
+      color: #8b949e;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>
+      <img src="../assets/logo.png" style="height:60px; margin-right:20px;" alt="Logo">
+      OpenMat Documentation
+    </h1>
+    <p>The Official Language Specification and Roadmap</p>
+  </header>
+
+  <div class="container">
+    
+    <div class="callout">
+      <strong>Welcome to OpenMat!</strong> OpenMat is a high-performance mathematical scripting language powered by a native Rust engine. It compiles directly into WebAssembly, allowing complex calculus and matrix algebra to run instantly in the browser.
+    </div>
+
+    <h2>1. Current Capabilities</h2>
+    <p>The OpenMat language engine currently implements a robust Abstract Syntax Tree (AST) supporting variables, control flow, mathematical tensor operations, and an integrated reverse-mode Autograd system.</p>
+    <ul>
+      <li><strong>Native Tensor Math:</strong> Compute Element-wise mathematical operations natively across multi-dimensional arrays without loops.</li>
+      <li><strong>Linear Algebra:</strong> Natively execute dot products, cross products, and matrix transformations instantly using BLAS-like efficiency.</li>
+      <li><strong>Autograd:</strong> Train neural networks using native backwards propagation capabilities built into the runtime.</li>
+      <li><strong>WebAssembly Core:</strong> The entire parser and evaluator runs at near-native speeds in any modern web browser.</li>
+    </ul>
+
+    <h2>2. Language Specification</h2>
+    
+    <h3>Variables & Data Types</h3>
+    <p>Variables are dynamically typed and initialized instantly.</p>
+    <div class="code-block">
+<span class="comment">// Floats and Strings</span><br>
+Scale = 10.5;<br>
+Message = <span class="string">"Initializing network..."</span>;<br><br>
+<span class="comment">// 1D Tensors</span><br>
+Weights = [0.1, 0.5, -0.2];<br><br>
+<span class="comment">// 2D Matrices</span><br>
+Image = [[255.0, 128.0], [0.0, 64.0]];
+    </div>
+
+    <h3>Matrix Mathematics</h3>
+    <p>Standard operators (`+`, `-`, `*`, `/`) apply element-wise across arrays. The `@` operator computes the dot product or matrix multiplication.</p>
+    <div class="code-block">
+A = [1.0, 2.0, 3.0];<br>
+B = [4.0, 5.0, 6.0];<br><br>
+<span class="comment">// Element-wise addition</span><br>
+C = A + B; <span class="comment">// [5.0, 7.0, 9.0]</span><br><br>
+<span class="comment">// Dot Product</span><br>
+D = A @ B;
+    </div>
+
+    <h3>Built-in Standard Library</h3>
+    <p>OpenMat provides native mathematical and algorithmic primitives:</p>
+    <div class="code-block">
+<span class="comment">// Array generation</span><br>
+X = <span class="function">linspace</span>([-10.0, 10.0, 100]);<br><br>
+<span class="comment">// Trigonometry</span><br>
+Y = <span class="function">sin</span>(X) + <span class="function">cos</span>(X);<br><br>
+<span class="comment">// Activation Functions</span><br>
+Z = <span class="function">sigmoid</span>(Y) + <span class="function">relu</span>(Y);<br><br>
+<span class="comment">// Array utilities</span><br>
+Length = <span class="function">len</span>(X);<br>
+Total = <span class="function">sum</span>(X);
+    </div>
+
+    <h2>3. Future Scope & Roadmap</h2>
+    <p>OpenMat is an open-source project actively seeking contributions. Here is the roadmap for future capabilities:</p>
+    
+    <h3>Phase 1: File I/O & Persistence</h3>
+    <p>We plan to implement `csvread()` and `csvwrite()` capabilities, allowing users to import massive real-world datasets into the OpenMat engine natively.</p>
+    
+    <h3>Phase 2: DataFrames</h3>
+    <p>Implementing a `DataFrame` native struct with column indexing to handle labelled tabular data, similar to Pandas, but powered natively by the Rust backend.</p>
+
+    <h3>Phase 3: 3D Visualization</h3>
+    <p>Integrating WebGL or Three.js to provide native `surf()` and `mesh()` functions, rendering interactive 3D visualizations directly within the Web IDE Output Pane.</p>
+
+  </div>
+
+  <footer>
+    &copy; 2026 OpenMat Contributors.<br>
+    Released under the MIT License.
+  </footer>
+
+</body>
+</html>

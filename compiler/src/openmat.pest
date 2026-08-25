@@ -1,5 +1,5 @@
 WHITESPACE = _{ " " | "\t" | "\r" | "\n" }
-COMMENT = _{ "//" ~ (!"\n" ~ ANY)* ~ ("\n" | EOI) }
+COMMENT = _{ "//" ~ (!"\n" ~ ANY)* }
 
 alpha = { 'a'..'z' | 'A'..'Z' }
 digit = { '0'..'9' }

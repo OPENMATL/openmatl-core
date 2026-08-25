@@ -10,11 +10,12 @@ OpenMat is an ultra-fast, multithreaded Matrix Compute Engine and custom Program
 
 ## Installation
 
-**From Source (Rust):**
+**From Source:**
 ```bash
 git clone https://github.com/yourusername/openmat.git
 cd openmat/openmat-core
-cargo install --path . --force
+chmod +x install.sh
+./install.sh
 ```
 
 This binds the `om` engine globally to your terminal!

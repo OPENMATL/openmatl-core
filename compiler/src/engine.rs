@@ -60,7 +60,7 @@ impl Engine {
             functions: HashMap::new(),
         };
         
-        let std_lib = include_str!("../std.om");
+        let std_lib = include_str!("../../lib/std.om");
         if let Ok(program) = crate::parser::parse_program(std_lib) {
             for stmt in program.statements {
                 let _ = engine.execute_statement(&stmt);

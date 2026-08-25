@@ -29,5 +29,7 @@ python3 -m http.server 8080
 ```
 
 ## 4. Submitting Pull Requests
-- Please ensure `cargo clippy` and `cargo test` pass successfully.
-- If modifying `openmat.pest` to introduce new grammar tokens, please document the new tokens in `LANGUAGE_SPEC.md`.
+We encourage all contributors to expand OpenMat! You don't need to know Rust to contribute:
+- **Algorithms & Math**: Write new OpenMat `.om` scripts inside the `/lib` standard library adding native math algorithms or operations!
+- **Core Engine**: If modifying the AST or `/compiler/src/openmat.pest` to introduce new grammar tokens, please document them in `LANGUAGE_SPEC.md`.
+- **Tests**: Please ensure `cargo test` passes inside `/compiler` before submitting.

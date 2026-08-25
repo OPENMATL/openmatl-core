@@ -51,6 +51,8 @@ pub enum ExecutionResult {
 pub struct Engine {
     pub variables: HashMap<String, NdArray>,
     pub functions: HashMap<String, FunctionDef>,
+    #[cfg(not(target_arch = "wasm32"))]
+    pub start_time: Option<std::time::Instant>,
 }
 
 impl Engine {
@@ -58,6 +60,8 @@ impl Engine {
         let mut engine = Self {
             variables: HashMap::new(),
             functions: HashMap::new(),
+            #[cfg(not(target_arch = "wasm32"))]
+            start_time: None,
         };
         let std_lib = include_str!("std.om");
         if let Ok(program) = crate::parser::parse_program(std_lib) {
@@ -254,6 +258,13 @@ impl Engine {
                 })
             }
             Expr::FunctionCall { name, arg } => {
+                if name == "print" {
+                    if let Expr::StringLiteral(s) = arg.as_ref() {
+                        println!("{}", s);
+                        return Ok(NdArray::scalar(0.0));
+                    }
+                }
+                
                 if name == "read_csv" {
                     #[cfg(not(target_arch = "wasm32"))]
                     if let Expr::StringLiteral(path) = arg.as_ref() {
@@ -298,6 +309,8 @@ impl Engine {
                     let mut local_engine = Engine {
                         variables: self.variables.clone(),
                         functions: self.functions.clone(),
+                        #[cfg(not(target_arch = "wasm32"))]
+                        start_time: self.start_time.clone(),
                     };
                     
                     if !func_def.params.is_empty() {
@@ -419,7 +432,7 @@ impl Engine {
                     } else {
                         Ok(evaluated)
                     }
-                } else if name == "sin" || name == "cos" || name == "tan" || name == "log" || name == "sqrt" || name == "relu" || name == "sigmoid" {
+                } else if name == "sin" || name == "cos" || name == "tan" || name == "log" || name == "exp" || name == "sqrt" || name == "relu" || name == "sigmoid" {
                     let map_fn = |i: usize| -> f64 {
                         let v = evaluated.get_val(i);
                         match name.as_str() {
@@ -427,6 +440,7 @@ impl Engine {
                             "cos" => v.cos(),
                             "tan" => v.tan(),
                             "log" => v.ln(),
+                            "exp" => v.exp(),
                             "sqrt" => v.sqrt(),
                             "relu" => if v > 0.0 { v } else { 0.0 },
                             "sigmoid" => 1.0 / (1.0 + (-v).exp()),
@@ -445,6 +459,32 @@ impl Engine {
                         shape: evaluated.shape.clone(),
                         grad: Arc::new(Mutex::new(None)),
                     })
+                } else if name == "tic" {
+                    #[cfg(not(target_arch = "wasm32"))]
+                    {
+                        self.start_time = Some(std::time::Instant::now());
+                    }
+                    Ok(NdArray::scalar(0.0))
+                } else if name == "toc" {
+                    #[cfg(not(target_arch = "wasm32"))]
+                    {
+                        if let Some(start) = self.start_time {
+                            let elapsed = start.elapsed();
+                            let ms = elapsed.as_secs_f64() * 1000.0;
+                            println!("Elapsed time: {:.4} ms", ms);
+                            return Ok(NdArray::scalar(ms));
+                        }
+                    }
+                    Ok(NdArray::scalar(0.0))
+                } else if name == "print" {
+                    if evaluated.shape.is_empty() {
+                        println!("{}", evaluated.get_val(0));
+                    } else if evaluated.shape.len() == 1 {
+                        println!("1D Array: {:?}", evaluated.data.values());
+                    } else {
+                        println!("Matrix shape {:?}: {:?}", evaluated.shape, evaluated.data.values());
+                    }
+                    Ok(NdArray::scalar(0.0))
                 } else {
                     Err(format!("Unknown function: {}", name))
                 }

@@ -1,4 +1,0 @@
-A = linspace([-10, 10, 1000000]);
-B = relu(A);
-C = mean(B);
-C

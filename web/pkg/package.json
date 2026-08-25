@@ -1,0 +1,15 @@
+{
+  "name": "openmatl-core",
+  "type": "module",
+  "version": "0.1.0",
+  "files": [
+    "openmatl_core_bg.wasm",
+    "openmatl_core.js",
+    "openmatl_core.d.ts"
+  ],
+  "main": "openmatl_core.js",
+  "types": "openmatl_core.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ]
+}

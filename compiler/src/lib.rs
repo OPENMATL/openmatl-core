@@ -99,6 +99,10 @@ pub mod wasm_bindings {
             }
         }
 
+        pub fn write_file(&mut self, name: &str, content: &str) {
+            self.engine.vfs.insert(name.to_string(), content.to_string());
+        }
+
         pub fn eval(&mut self, code: &str) -> Result<JsValue, JsValue> {
             match parse_program(code) {
                 Ok(program) => {

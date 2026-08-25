@@ -418,6 +418,9 @@
       await init();
       engine = new WasmEngine();
       
+      // Phase 17: Preload Virtual File System
+      engine.write_file("dataset.csv", "Age,Income,Score\n25,50000,8.5\n30,60000,9.2\n35,70000,7.8\n40,85000,8.9\n45,95000,9.5");
+      
       const editor = document.getElementById('editor');
       
       // 10x Showcases
@@ -431,7 +434,7 @@
       document.getElementById('demo-8').onclick = () => editor.value = "// 8. Statistical Reductions\nX = [1.5, 9.2, 4.1, 7.8, 3.3];\nMaxVal = max(X);\nMinVal = min(X);\nMeanVal = mean(X);\n\nprint(\"Max:\");\nprint(MaxVal);\nprint(\"Min:\");\nprint(MinVal);\nprint(\"Mean:\");\nprint(MeanVal);";
       document.getElementById('demo-9').onclick = () => editor.value = "// 9. Autograd Neural Network\nWeights = [0.1, 0.5, -0.2];\nInput = [2.0, 1.0, 0.1];\n\nZ = sum(Weights * Input);\nPrediction = sigmoid(Z);\n\nLoss = (Prediction - 1.0) * (Prediction - 1.0);\nbackward(Loss);\n\nPrediction";
       document.getElementById('demo-10').onclick = () => editor.value = "// 10. Element-wise Calculus Benchmark\nA = linspace([1.0, 100.0, 250000]);\n\ntic(0);\nB = exp(A / 100.0) * cos(A) + abs(A);\ntoc(0);\n\nprint(\"Benchmark completed.\");";
-      document.getElementById('demo-11').onclick = () => editor.value = "// 11. File I/O\n// The read_csv() function works flawlessly in the Native macOS CLI.\n// However, we are seeking contributors to build Web File System Support so it works in the WebAssembly IDE too!\n\nData = read_csv(\"dataset.csv\");\nData";
+      document.getElementById('demo-11').onclick = () => editor.value = "// 11. Native DataFrames & Virtual File I/O\n// The WebAssembly engine natively supports reading CSVs from the Virtual File System!\n\ndf = read_csv(\"dataset.csv\");\n\n// Native Pandas-style string indexing slices the column!\nIncomes = df[\"Income\"];\n\nprint(\"Full DataFrame:\");\nprint(df);\n\nprint(\"Sliced 'Income' Column:\");\nprint(Incomes);\n\nIncomes";
 
       function renderMatrixTable(matrix) {
         const table = document.createElement('table');

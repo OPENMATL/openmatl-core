@@ -2,7 +2,7 @@
   <img src="assets/logo.png" width="200" height="200" alt="OpenMatL Core Logo">
 </p>
 <h1 align="center">OpenMatL-Core</h1>
-<h3 align="center">The Rust Compilation Engine for OpenMatL</h3>
+<h3 align="center">The Rust Compilation Engine for OpenMatL (The Open-Source MATLAB Alternative)</h3>
 
 Welcome to the Engine Room! `openmatl-core` is the native, highly-optimized Rust backend that powers the OpenMatL programming language. 
 

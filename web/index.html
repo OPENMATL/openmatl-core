@@ -3,24 +3,24 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="OpenMat is a lightning-fast, highly concurrent programming language and execution environment dedicated to machine learning and matrix mathematics. The open-source alternative to MATLAB.">
-  <meta name="keywords" content="OpenMat, programming language, matrix mathematics, machine learning, MATLAB alternative, WebAssembly IDE, Rust compiler, open source math engine, data science, deep learning">
-  <meta name="author" content="OpenMat Contributors">
+  <meta name="description" content="OpenMatL is a lightning-fast, highly concurrent programming language and execution environment dedicated to machine learning and matrix mathematics. The open-source alternative to MATLAB.">
+  <meta name="keywords" content="OpenMatL, programming language, matrix mathematics, machine learning, MATLAB alternative, WebAssembly IDE, Rust compiler, open source math engine, data science, deep learning">
+  <meta name="author" content="OpenMatL Contributors">
   <meta name="robots" content="index, follow">
   
   <!-- Open Graph / Social Media -->
   <meta property="og:type" content="website">
-  <meta property="og:title" content="OpenMat: The Native Math Engine">
+  <meta property="og:title" content="OpenMatL: The Native Math Engine">
   <meta property="og:description" content="A blazing fast, open-source alternative to MATLAB. Execute high-performance Matrix Math and Deep Learning algorithms directly in your browser.">
-  <meta property="og:image" content="https://raw.githubusercontent.com/openmat/openmat/main/assets/logo.png">
+  <meta property="og:image" content="https://raw.githubusercontent.com/openmatl/openmatl/main/assets/logo.png">
 
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image">
-  <meta property="twitter:title" content="OpenMat: The Native Math Engine">
+  <meta property="twitter:title" content="OpenMatL: The Native Math Engine">
   <meta property="twitter:description" content="A blazing fast, open-source alternative to MATLAB. Execute high-performance Matrix Math and Deep Learning algorithms directly in your browser.">
-  <meta property="twitter:image" content="https://raw.githubusercontent.com/openmat/openmat/main/assets/logo.png">
+  <meta property="twitter:image" content="https://raw.githubusercontent.com/openmatl/openmatl/main/assets/logo.png">
 
-  <title>OpenMat: The Native Math Engine | Open-Source MATLAB Alternative</title>
+  <title>OpenMatL: The Native Math Engine | Open-Source MATLAB Alternative</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     :root {
@@ -263,7 +263,7 @@
   <nav class="top-nav">
     <div class="nav-brand">
       <img src="../assets/logo.png" alt="Logo">
-      <h1>OpenMat</h1>
+      <h1>OpenMatL</h1>
     </div>
     <div class="nav-tabs">
       <div class="nav-tab active" onclick="switchTab('home')">Home & Docs</div>
@@ -274,15 +274,15 @@
   <!-- HOME PAGE TAB -->
   <div id="home-page" class="page-container active">
     <div class="hero">
-      <img src="../assets/logo.png" alt="OpenMat Logo" style="width: 120px; height: 120px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,255,255,0.2); margin-bottom: 20px;">
+      <img src="../assets/logo.png" alt="OpenMatL Logo" style="width: 120px; height: 120px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,255,255,0.2); margin-bottom: 20px;">
       <h2 style="font-size: 3.5rem; margin-bottom: 5px;">The Native Math Engine</h2>
       <p style="font-size: 1.4rem; font-weight: bold; color: var(--cyan); margin-bottom: 20px; margin-top: 0;">The Blazing Fast, Open-Source Alternative to MATLAB</p>
-      <p>OpenMat is a high-performance mathematical scripting language powered by a native Rust engine. It compiles directly into WebAssembly, allowing complex calculus and matrix algebra to run instantly anywhere.</p>
+      <p>OpenMatL is a high-performance mathematical scripting language powered by a native Rust engine. It compiles directly into WebAssembly, allowing complex calculus and matrix algebra to run instantly anywhere.</p>
     </div>
 
     <div class="info-grid">
       <div class="info-card">
-        <h3>🚀 What is OpenMat?</h3>
+        <h3>🚀 What is OpenMatL?</h3>
         <p>A specialized syntax tree for deep mathematical operations. It natively supports:</p>
         <ul>
           <li><strong>Element-wise Tensor Math</strong> across multi-dimensional arrays</li>
@@ -293,18 +293,18 @@
 
       <div class="info-card">
         <h3>💻 Installation</h3>
-        <p>The OpenMat Native CLI Engine is currently available for macOS. The Web IDE and VS Code Extension run flawlessly on all platforms.</p>
+        <p>The OpenMatL Native CLI Engine is currently available for macOS. The Web IDE and VS Code Extension run flawlessly on all platforms.</p>
         <p><strong>macOS Native Installer:</strong></p>
-        <p>Download the official <code>.pkg</code> installer directly from our <a href="https://github.com/openmat/openmat/releases" target="_blank" style="color: var(--cyan);">GitHub Releases</a>.</p>
+        <p>Download the official <code>.pkg</code> installer directly from our <a href="https://github.com/openmatl/openmatl/releases" target="_blank" style="color: var(--cyan);">GitHub Releases</a>.</p>
         <p style="margin-top: 15px;"><strong>Windows & Linux (Compile from Source):</strong></p>
         <div class="install-code">
-          $ git clone https://github.com/openmat/openmat-core.git<br>
-          $ cd openmat-core/compiler<br>
+          $ git clone https://github.com/openmatl/openmatl-core.git<br>
+          $ cd openmatl-core/compiler<br>
           $ cargo build --release
         </div>
         <p style="margin-top: 15px;"><strong>VS Code Extension (Syntax Highlighting):</strong></p>
         <div class="install-code">
-          $ code --install-extension openmat-0.1.0.vsix
+          $ code --install-extension openmatl-0.1.0.vsix
         </div>
       </div>
 
@@ -315,13 +315,13 @@
 
       <div class="info-card">
         <h3>🛠️ Contribute</h3>
-        <p>OpenMat is actively looking for contributors! Our roadmap includes:</p>
+        <p>OpenMatL is actively looking for contributors! Our roadmap includes:</p>
         <ul>
           <li>WebAssembly File I/O Support (<code>read_csv</code> / <code>csvwrite</code>)</li>
           <li>Pandas-style <code>DataFrames</code> natively in Rust</li>
           <li>3D WebGL plotting implementations</li>
         </ul>
-        <p><a href="https://github.com/openmat" target="_blank" style="color: var(--cyan);">View on GitHub</a></p>
+        <p><a href="https://github.com/openmatl" target="_blank" style="color: var(--cyan);">View on GitHub</a></p>
       </div>
     </div>
     
@@ -330,7 +330,7 @@
     </div>
 
     <footer style="margin-top: 60px; text-align: center; color: #8b949e; font-size: 0.9rem; border-top: 1px solid var(--border); padding-top: 20px; width: 100%; max-width: 1000px;">
-      &copy; 2026 OpenMat Contributors. Released under the MIT License.<br>
+      &copy; 2026 OpenMatL Contributors. Released under the MIT License.<br>
       Built for high-performance mathematical computation.
     </footer>
   </div>
@@ -360,7 +360,7 @@
         
         <div style="margin-top: auto; padding-top: 20px; border-top: 1px solid var(--border); text-align: center; color: #8b949e; font-size: 0.8rem;">
           <a href="documentation.html" target="_blank" style="color: var(--cyan); text-decoration: none; font-weight: bold; display: block; margin-bottom: 10px;">Read Full Docs</a>
-          &copy; 2026 OpenMat Contributors.<br>MIT License.
+          &copy; 2026 OpenMatL Contributors.<br>MIT License.
         </div>
       </aside>
 
@@ -387,7 +387,7 @@
           </div>
         </div>
         <div class="editor-container">
-          <textarea id="editor" spellcheck="false">// Welcome to the OpenMat Real-Time Web IDE!
+          <textarea id="editor" spellcheck="false">// Welcome to the OpenMatL Real-Time Web IDE!
 // Click any of the 10 showcases above to test the engine.</textarea>
         </div>
       </main>
@@ -405,7 +405,7 @@
   <div id="toast"></div>
 
   <script type="module">
-    import init, { WasmEngine } from './pkg/openmat_core.js';
+    import init, { WasmEngine } from './pkg/openmatl_core.js';
     
     // Tab Switching Logic
     window.switchTab = function(tabName) {

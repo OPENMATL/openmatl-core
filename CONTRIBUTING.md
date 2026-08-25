@@ -1,8 +1,8 @@
-# Contributing to `openmat-core`
+# Contributing to `openmatl-core`
 
 Welcome! If you are here, you are a Core Systems Engineer, Compiler Architect, or Rust Developer looking to optimize the absolute bleeding-edge of Machine Learning compilation.
 
-*(If you just want to add a math formula or deep learning layer using `.om` scripts, please submit those Pull Requests to the [openmat-lang/openmat](https://github.com/openmat-lang/openmat) repository instead!)*
+*(If you just want to add a math formula or deep learning layer using `.om` scripts, please submit those Pull Requests to the [openmatl-lang/openmatl](https://github.com/openmatl-lang/openmatl) repository instead!)*
 
 ## 🏗️ Current Engine Architecture & Capabilities
 Before contributing, it is critical to understand what the AST and Native Engine currently support:
@@ -12,7 +12,7 @@ Before contributing, it is critical to understand what the AST and Native Engine
 - **Concurrency:** Matrix operations execute in parallel using the `rayon` crate.
 
 ## 🚀 Future Scope (What we need Rust Engineers to build!)
-To allow the open-source community to build advanced math (like Fourier Transforms) in the `openmat` language repo, we need Rust engineers to extend the core engine with the following primitives:
+To allow the open-source community to build advanced math (like Fourier Transforms) in the `openmatl` language repo, we need Rust engineers to extend the core engine with the following primitives:
 
 1. **New Core Data Types:**
    - **Complex Numbers (`Complex64`)**: Necessary for FFT and signal processing algorithms.
@@ -30,6 +30,6 @@ To allow the open-source community to build advanced math (like Fourier Transfor
 
 ## 🛠️ How to Contribute
 1. Fork this repository.
-2. Modify the `engine.rs` or `openmat.pest` files inside `/compiler/src`.
+2. Modify the `engine.rs` or `openmatl.pest` files inside `/compiler/src`.
 3. Test your changes using `cargo run -- run test.om`.
 4. Submit a Pull Request!

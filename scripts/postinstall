@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# OpenMat macOS Installer Post-Install Script
-echo "Running OpenMat Post-Install configuration..."
+# OpenMatL macOS Installer Post-Install Script
+echo "Running OpenMatL Post-Install configuration..."
 
 # Get the actual logged-in user (since installer runs as root)
 LOGGED_IN_USER=$(stat -f "%Su" /dev/console)
@@ -10,11 +10,11 @@ LOGGED_IN_USER=$(stat -f "%Su" /dev/console)
 # if the 'code' CLI is available on the user's system.
 if sudo -u $LOGGED_IN_USER command -v code &> /dev/null
 then
-    echo "VS Code detected! Installing OpenMat Syntax Highlighting..."
-    sudo -u $LOGGED_IN_USER code --install-extension /usr/local/share/openmat/openmat-0.1.0.vsix --force
+    echo "VS Code detected! Installing OpenMatL Syntax Highlighting..."
+    sudo -u $LOGGED_IN_USER code --install-extension /usr/local/share/openmatl/openmatl-0.1.0.vsix --force
 else
     echo "VS Code CLI ('code') not found. Skipping automatic extension installation."
-    echo "You can manually install the extension from /usr/local/share/openmat/openmat-0.1.0.vsix"
+    echo "You can manually install the extension from /usr/local/share/openmatl/openmatl-0.1.0.vsix"
 fi
 
 exit 0

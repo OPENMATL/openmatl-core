@@ -1,10 +1,10 @@
 [package]
-name = "openmat-core"
+name = "openmatl-core"
 version = "0.1.0"
 edition = "2024"
 
 [lib]
-name = "openmat_core"
+name = "openmatl_core"
 crate-type = ["cdylib", "rlib"]
 
 [[bin]]

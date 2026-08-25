@@ -5,8 +5,8 @@ use pest_derive::Parser;
 use crate::ast::*;
 
 #[derive(Parser)]
-#[grammar = "openmat.pest"]
-pub struct OpenMatParser;
+#[grammar = "openmatl.pest"]
+pub struct OpenMatLParser;
 
 pub fn parse_expr(pair: Pair<Rule>) -> Expr {
     match pair.as_rule() {
@@ -128,7 +128,7 @@ pub fn parse_statement(pair: Pair<Rule>) -> Statement {
 }
 
 pub fn parse_program(input: &str) -> Result<Program, pest::error::Error<Rule>> {
-    let mut program_pairs = OpenMatParser::parse(Rule::program, input)?;
+    let mut program_pairs = OpenMatLParser::parse(Rule::program, input)?;
     
     let mut statements = Vec::new();
     if let Some(program_pair) = program_pairs.next() {

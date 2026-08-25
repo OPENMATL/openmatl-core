@@ -13,13 +13,13 @@ jobs:
         include:
           - os: ubuntu-latest
             artifact_name: om-linux
-            asset_name: openmat-linux-amd64
+            asset_name: openmatl-linux-amd64
           - os: macos-latest
             artifact_name: om-mac
-            asset_name: openmat-macos-amd64
+            asset_name: openmatl-macos-amd64
           - os: windows-latest
             artifact_name: om-windows.exe
-            asset_name: openmat-windows-amd64.exe
+            asset_name: openmatl-windows-amd64.exe
 
     steps:
     - uses: actions/checkout@v3

@@ -73,7 +73,7 @@ pub mod python_bindings {
     }
 
     #[pymodule]
-    fn openmat_core(_py: Python, m: &Bound<'_, PyModule>) -> PyResult<()> {
+    fn openmatl_core(_py: Python, m: &Bound<'_, PyModule>) -> PyResult<()> {
         m.add_class::<PyEngine>()?;
         Ok(())
     }

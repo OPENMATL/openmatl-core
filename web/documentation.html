@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Full technical documentation for OpenMat, the high-performance Rust and WebAssembly based mathematical scripting language. Explore syntax, matrix algebra, and autograd backpropagation.">
-  <meta name="keywords" content="OpenMat documentation, language reference, autograd, matrix operations, syntax guide, MATLAB syntax">
-  <meta name="author" content="OpenMat Contributors">
+  <meta name="description" content="Full technical documentation for OpenMatL, the high-performance Rust and WebAssembly based mathematical scripting language. Explore syntax, matrix algebra, and autograd backpropagation.">
+  <meta name="keywords" content="OpenMatL documentation, language reference, autograd, matrix operations, syntax guide, MATLAB syntax">
+  <meta name="author" content="OpenMatL Contributors">
   <meta name="robots" content="index, follow">
   
   <!-- Open Graph / Social Media -->
   <meta property="og:type" content="article">
-  <meta property="og:title" content="OpenMat Documentation & Language Reference">
-  <meta property="og:description" content="Learn how to write high-performance mathematical scripts in OpenMat using our Turing-complete syntax.">
-  <meta property="og:image" content="https://raw.githubusercontent.com/openmat/openmat/main/assets/logo.png">
+  <meta property="og:title" content="OpenMatL Documentation & Language Reference">
+  <meta property="og:description" content="Learn how to write high-performance mathematical scripts in OpenMatL using our Turing-complete syntax.">
+  <meta property="og:image" content="https://raw.githubusercontent.com/openmatl/openmatl/main/assets/logo.png">
 
-  <title>OpenMat Documentation | Language Reference & API Guide</title>
+  <title>OpenMatL Documentation | Language Reference & API Guide</title>
   <style>
     :root {
       --bg: #0d1117;
@@ -122,7 +122,7 @@
   <header>
     <h1>
       <img src="../assets/logo.png" style="height:60px; margin-right:20px;" alt="Logo">
-      OpenMat Documentation
+      OpenMatL Documentation
     </h1>
     <p>The Official Language Specification and Roadmap</p>
   </header>
@@ -130,11 +130,11 @@
   <div class="container">
     
     <div class="callout">
-      <strong>Welcome to OpenMat!</strong> OpenMat is a high-performance mathematical scripting language powered by a native Rust engine. It compiles directly into WebAssembly, allowing complex calculus and matrix algebra to run instantly in the browser.
+      <strong>Welcome to OpenMatL!</strong> OpenMatL is a high-performance mathematical scripting language powered by a native Rust engine. It compiles directly into WebAssembly, allowing complex calculus and matrix algebra to run instantly in the browser.
     </div>
 
     <h2>1. Current Capabilities</h2>
-    <p>The OpenMat language engine currently implements a robust Abstract Syntax Tree (AST) supporting variables, control flow, mathematical tensor operations, and an integrated reverse-mode Autograd system.</p>
+    <p>The OpenMatL language engine currently implements a robust Abstract Syntax Tree (AST) supporting variables, control flow, mathematical tensor operations, and an integrated reverse-mode Autograd system.</p>
     <ul>
       <li><strong>Native Tensor Math:</strong> Compute Element-wise mathematical operations natively across multi-dimensional arrays without loops.</li>
       <li><strong>Linear Algebra:</strong> Natively execute dot products, cross products, and matrix transformations instantly using BLAS-like efficiency.</li>
@@ -168,7 +168,7 @@ D = A @ B;
     </div>
 
     <h3>Built-in Standard Library</h3>
-    <p>OpenMat provides native mathematical and algorithmic primitives:</p>
+    <p>OpenMatL provides native mathematical and algorithmic primitives:</p>
     <div class="code-block">
 <span class="comment">// Array generation</span><br>
 X = <span class="function">linspace</span>([-10.0, 10.0, 100]);<br><br>
@@ -182,7 +182,7 @@ Total = <span class="function">sum</span>(X);
     </div>
 
     <h2>3. Future Scope & Roadmap</h2>
-    <p>OpenMat is an open-source project actively seeking contributions. Here is the roadmap for future capabilities:</p>
+    <p>OpenMatL is an open-source project actively seeking contributions. Here is the roadmap for future capabilities:</p>
     
     <h3>Phase 1: File I/O & Persistence</h3>
     <p>The Native macOS CLI currently supports <code>read_csv("path.csv")</code>. However, we are actively looking for contributors to implement the browser File System API so that <code>read_csv()</code> works seamlessly inside the WebAssembly Engine. We also plan to implement <code>csvwrite()</code> capabilities.</p>
@@ -196,7 +196,7 @@ Total = <span class="function">sum</span>(X);
   </div>
 
   <footer>
-    &copy; 2026 OpenMat Contributors.<br>
+    &copy; 2026 OpenMatL Contributors.<br>
     Released under the MIT License.
   </footer>
 

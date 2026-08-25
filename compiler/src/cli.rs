@@ -12,7 +12,7 @@ pub fn run_repl() -> Result<()> {
     
     let mut engine = Engine::new();
     
-    println!("OpenMat CLI v0.1.0");
+    println!("OpenMatL CLI v0.1.0");
     println!("Type your equations. Try: C = [2, 2] * 4");
     println!("Ctrl-C or Ctrl-D to exit.");
     

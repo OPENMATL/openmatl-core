@@ -1,5 +1,5 @@
 import sys
-import openmat_core
+import openmatl_core
 
 if len(sys.argv) < 2:
     print("Usage: python run_om.py <script.om>")
@@ -8,7 +8,7 @@ if len(sys.argv) < 2:
 script_path = sys.argv[1]
 
 # Initialize Engine
-engine = openmat_core.PyEngine()
+engine = openmatl_core.PyEngine()
 
 # Read & Evaluate Script
 try:

@@ -338,6 +338,7 @@
             <button class="btn" id="demo-10">10. Benchmark</button>
           </div>
           <div class="toolbar-actions">
+            <button class="btn" id="download-btn" style="background: rgba(255,255,255,0.1); color: #e6edf3; border-color: #30363d;">Download .om Script</button>
             <button class="btn btn-plot" id="plot-btn">Render 2D Chart</button>
             <button class="btn btn-run" id="run-btn">Execute WebAssembly</button>
           </div>
@@ -501,6 +502,24 @@
           }
         });
         showToast("Chart rendered successfully!", true);
+      });
+
+      document.getElementById('download-btn').addEventListener('click', () => {
+        const code = editor.value;
+        if (!code.trim()) {
+          showToast("Editor is empty!");
+          return;
+        }
+        const blob = new Blob([code], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'script.om';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        showToast("File downloaded successfully!", true);
       });
     }
 

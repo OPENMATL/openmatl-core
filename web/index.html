@@ -297,8 +297,8 @@
         <h3>🛠️ Contribute</h3>
         <p>OpenMat is actively looking for contributors! Our roadmap includes:</p>
         <ul>
-          <li>Native File I/O (`csvread` / `csvwrite`)</li>
-          <li>Pandas-style `DataFrames`</li>
+          <li>WebAssembly File I/O Support (<code>read_csv</code> / <code>csvwrite</code>)</li>
+          <li>Pandas-style <code>DataFrames</code> natively in Rust</li>
           <li>3D WebGL plotting implementations</li>
         </ul>
         <p><a href="https://github.com/openmat" target="_blank" style="color: var(--cyan);">View on GitHub</a></p>
@@ -346,7 +346,7 @@
 
       <main class="main-panel">
         <div class="toolbar-wrapper">
-          <div class="toolbar-title">10x Showcase Gallery (Click to Inject)</div>
+          <div class="toolbar-title">Showcase Gallery (Click to Inject)</div>
           <div class="toolbar-showcases">
             <button class="btn" id="demo-1">1. Sine Wave</button>
             <button class="btn" id="demo-2">2. Tangent Wave</button>
@@ -358,6 +358,7 @@
             <button class="btn" id="demo-8">8. Statistics</button>
             <button class="btn" id="demo-9">9. Autograd NN</button>
             <button class="btn" id="demo-10">10. Benchmark</button>
+            <button class="btn" id="demo-11">11. File I/O</button>
           </div>
           <div class="toolbar-actions">
             <button class="btn" id="download-btn" style="background: rgba(255,255,255,0.1); color: #e6edf3; border-color: #30363d;">Download .om Script</button>
@@ -430,6 +431,7 @@
       document.getElementById('demo-8').onclick = () => editor.value = "// 8. Statistical Reductions\nX = [1.5, 9.2, 4.1, 7.8, 3.3];\nMaxVal = max(X);\nMinVal = min(X);\nMeanVal = mean(X);\n\nprint(\"Max:\");\nprint(MaxVal);\nprint(\"Min:\");\nprint(MinVal);\nprint(\"Mean:\");\nprint(MeanVal);";
       document.getElementById('demo-9').onclick = () => editor.value = "// 9. Autograd Neural Network\nWeights = [0.1, 0.5, -0.2];\nInput = [2.0, 1.0, 0.1];\n\nZ = sum(Weights * Input);\nPrediction = sigmoid(Z);\n\nLoss = (Prediction - 1.0) * (Prediction - 1.0);\nbackward(Loss);\n\nPrediction";
       document.getElementById('demo-10').onclick = () => editor.value = "// 10. Element-wise Calculus Benchmark\nA = linspace([1.0, 100.0, 250000]);\n\ntic(0);\nB = exp(A / 100.0) * cos(A) + abs(A);\ntoc(0);\n\nprint(\"Benchmark completed.\");";
+      document.getElementById('demo-11').onclick = () => editor.value = "// 11. File I/O\n// The read_csv() function works flawlessly in the Native macOS CLI.\n// However, we are seeking contributors to build Web File System Support so it works in the WebAssembly IDE too!\n\nData = read_csv(\"dataset.csv\");\nData";
 
       function renderMatrixTable(matrix) {
         const table = document.createElement('table');

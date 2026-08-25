@@ -173,7 +173,7 @@ Total = <span class="function">sum</span>(X);
     <p>OpenMat is an open-source project actively seeking contributions. Here is the roadmap for future capabilities:</p>
     
     <h3>Phase 1: File I/O & Persistence</h3>
-    <p>We plan to implement `csvread()` and `csvwrite()` capabilities, allowing users to import massive real-world datasets into the OpenMat engine natively.</p>
+    <p>The Native macOS CLI currently supports <code>read_csv("path.csv")</code>. However, we are actively looking for contributors to implement the browser File System API so that <code>read_csv()</code> works seamlessly inside the WebAssembly Engine. We also plan to implement <code>csvwrite()</code> capabilities.</p>
     
     <h3>Phase 2: DataFrames</h3>
     <p>Implementing a `DataFrame` native struct with column indexing to handle labelled tabular data, similar to Pandas, but powered natively by the Rust backend.</p>

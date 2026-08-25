@@ -60,6 +60,22 @@
         gap: 15px;
         margin-top: 20px;
       }
+      .demo-bar {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 15px;
+      }
+      .demo-btn {
+        background: rgba(88, 166, 255, 0.1);
+        color: #58a6ff;
+        border: 1px solid rgba(88, 166, 255, 0.4);
+        padding: 8px 16px;
+        font-size: 0.9rem;
+      }
+      .demo-btn:hover {
+        background: rgba(88, 166, 255, 0.2);
+        box-shadow: 0 0 10px rgba(88, 166, 255, 0.3);
+      }
       button {
         padding: 12px 24px;
         font-size: 1rem;
@@ -127,6 +143,11 @@
     <p class="subtitle">WASM powered ML Matrix Environment</p>
     
     <div class="container">
+      <div class="demo-bar">
+        <button class="demo-btn" id="demo-matrix">Matrix Math</button>
+        <button class="demo-btn" id="demo-autograd">Autograd</button>
+        <button class="demo-btn" id="demo-benchmark">Benchmark</button>
+      </div>
       <textarea id="editor" placeholder="A = linspace([-10, 10, 100]);&#10;B = relu(A);&#10;B"></textarea>
       
       <div class="controls">
@@ -154,6 +175,18 @@
         const plotBtn = document.getElementById('plot-btn');
         const editor = document.getElementById('editor');
         const outputContainer = document.getElementById('output-container');
+        
+        document.getElementById('demo-matrix').addEventListener('click', () => {
+          editor.value = "// Native Matrix Math\nA = [1, 2; 3, 4];\nB = [5, 6; 7, 8];\nC = A @ B;\nC";
+        });
+        
+        document.getElementById('demo-autograd').addEventListener('click', () => {
+          editor.value = "// Autograd and Neural Networks\nWeights = [0.1, 0.5, -0.2];\nInput = [2.0, 1.0, 0.1];\n\n// Forward Pass\nZ = Weights @ Input;\nPrediction = sigmoid(Z);\n\n// Loss\nLoss = (Prediction - 1.0) * (Prediction - 1.0);\nLoss.backward();\n\nPrediction";
+        });
+        
+        document.getElementById('demo-benchmark').addEventListener('click', () => {
+          editor.value = "// Performance Benchmark\nA = linspace([1.0, 100.0, 10000]);\n\ntic(0);\nB = sin(A) * cos(A) + exp(A / 100.0);\ntoc(0);\n\nB";
+        });
         
         function renderMatrixTable(matrix) {
           const table = document.createElement('table');

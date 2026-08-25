@@ -1,0 +1,54 @@
+name: Build and Release Installers
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  build:
+    name: Build on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            artifact_name: om-linux
+            asset_name: openmat-linux-amd64
+          - os: macos-latest
+            artifact_name: om-mac
+            asset_name: openmat-macos-amd64
+          - os: windows-latest
+            artifact_name: om-windows.exe
+            asset_name: openmat-windows-amd64.exe
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Rust
+      uses: dtolnay/rust-toolchain@stable
+
+    - name: Build Release Binary
+      run: cargo build --release
+      working-directory: ./compiler
+
+    - name: Upload Linux/Mac Artifact
+      if: matrix.os != 'windows-latest'
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ github.event.release.upload_url }}
+        asset_path: ./compiler/target/release/om
+        asset_name: ${{ matrix.asset_name }}
+        asset_content_type: application/octet-stream
+
+    - name: Upload Windows Artifact
+      if: matrix.os == 'windows-latest'
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ github.event.release.upload_url }}
+        asset_path: ./compiler/target/release/om.exe
+        asset_name: ${{ matrix.asset_name }}
+        asset_content_type: application/octet-stream

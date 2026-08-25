@@ -1,0 +1,54 @@
+WHITESPACE = _{ " " | "\t" | "\r" | "\n" }
+COMMENT = _{ "//" ~ (!"\n" ~ ANY)* ~ ("\n" | EOI) }
+
+alpha = { 'a'..'z' | 'A'..'Z' }
+digit = { '0'..'9' }
+
+ident = @{ alpha ~ (alpha | digit | "_")* }
+number = @{ "-"? ~ digit+ ~ ("." ~ digit+)? }
+string_literal = @{ "\"" ~ (!"\"" ~ ANY)* ~ "\"" }
+function_call = { ident ~ "(" ~ expr ~ ")" }
+
+// Slicing
+slice_access = { ident ~ "[" ~ expr ~ (":" ~ expr)? ~ "]" }
+
+// Arrays / Matrices e.g., [1, 2, 3] or [[1, 2], [3, 4]]
+array = { "[" ~ (expr ~ ("," ~ expr)*)? ~ "]" }
+
+// Primary expressions
+primary = _{ function_call | slice_access | number | string_literal | ident | array | "(" ~ expr ~ ")" }
+
+// Operators
+add = { "+" }
+sub = { "-" }
+mul = { "*" }
+div = { "/" }
+pow = { "^" }
+dot = { "@" }
+
+// Comparisons
+eq  = { "==" }
+neq = { "!=" }
+gte = { ">=" }
+lte = { "<=" }
+gt  = { ">" }
+lt  = { "<" }
+
+operator = _{ add | sub | mul | div | pow | dot | eq | neq | gte | lte | gt | lt }
+
+expr = { primary ~ (operator ~ primary)* }
+
+assignment = { ident ~ "=" ~ expr }
+
+// Control Flow
+block = { "{" ~ (statement ~ (";")?)* ~ "}" }
+if_stmt = { "if" ~ expr ~ block ~ ("else" ~ block)? }
+
+// Functions
+fn_stmt = { "fn" ~ ident ~ "(" ~ (ident ~ ("," ~ ident)*)? ~ ")" ~ block }
+return_stmt = { "return" ~ expr }
+
+statement = _{ fn_stmt | return_stmt | if_stmt | assignment | expr }
+
+// Main entry point
+program = { SOI ~ (statement ~ (";" | EOI))* ~ EOI }

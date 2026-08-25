@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>OpenMat WebAssembly IDE</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+      body {
+        background-color: #0d1117;
+        color: #c9d1d9;
+        font-family: 'Inter', -apple-system, sans-serif;
+        padding: 40px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 0;
+      }
+      h1 {
+        font-size: 3rem;
+        background: linear-gradient(90deg, #00f2fe, #4facfe);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 10px;
+      }
+      p.subtitle {
+        color: #8b949e;
+        font-size: 1.1rem;
+        margin-bottom: 30px;
+      }
+      .container {
+        width: 100%;
+        max-width: 900px;
+        background: rgba(22, 27, 34, 0.6);
+        border: 1px solid #30363d;
+        border-radius: 16px;
+        padding: 25px;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        backdrop-filter: blur(10px);
+      }
+      #editor {
+        width: 100%;
+        height: 180px;
+        background-color: #0d1117;
+        color: #58a6ff;
+        border: 1px solid #30363d;
+        border-radius: 8px;
+        padding: 15px;
+        font-size: 1.2rem;
+        font-family: 'JetBrains Mono', 'Courier New', monospace;
+        outline: none;
+        resize: vertical;
+        box-sizing: border-box;
+      }
+      #editor:focus {
+        border-color: #58a6ff;
+        box-shadow: 0 0 10px rgba(88, 166, 255, 0.2);
+      }
+      .controls {
+        display: flex;
+        gap: 15px;
+        margin-top: 20px;
+      }
+      button {
+        padding: 12px 24px;
+        font-size: 1rem;
+        font-weight: 600;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+      #run-btn {
+        background: #238636;
+        color: white;
+      }
+      #run-btn:hover {
+        background: #2ea043;
+        box-shadow: 0 0 15px rgba(46, 160, 67, 0.4);
+      }
+      #plot-btn {
+        background: #1f6feb;
+        color: white;
+      }
+      #plot-btn:hover {
+        background: #388bfd;
+        box-shadow: 0 0 15px rgba(56, 139, 253, 0.4);
+      }
+      .output-section {
+        margin-top: 30px;
+        background-color: #0d1117;
+        border: 1px solid #30363d;
+        border-radius: 8px;
+        padding: 20px;
+        min-height: 150px;
+        position: relative;
+      }
+      .matrix-table {
+        border-collapse: collapse;
+        margin-top: 10px;
+        width: 100%;
+        color: #e6edf3;
+      }
+      .matrix-table td {
+        border: 1px solid #30363d;
+        padding: 10px;
+        text-align: right;
+        font-family: monospace;
+      }
+      .matrix-table tr:nth-child(even) {
+        background-color: #161b22;
+      }
+      canvas {
+        margin-top: 20px;
+        background: #161b22;
+        border-radius: 8px;
+        padding: 10px;
+      }
+      #raw-output {
+        font-family: monospace;
+        color: #79c0ff;
+        word-break: break-all;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>OpenMat Web UI</h1>
+    <p class="subtitle">WASM powered ML Matrix Environment</p>
+    
+    <div class="container">
+      <textarea id="editor" placeholder="A = linspace([-10, 10, 100]);&#10;B = relu(A);&#10;B"></textarea>
+      
+      <div class="controls">
+        <button id="run-btn">Execute Compute</button>
+        <button id="plot-btn">Render Chart</button>
+      </div>
+      
+      <div class="output-section" id="output-container">
+        <div id="raw-output">Ready.</div>
+      </div>
+    </div>
+
+    <script type="module">
+      import init, { WasmEngine } from '../pkg/openmat_core.js';
+      
+      let lastResultData = null;
+      let chartInstance = null;
+
+      async function run() {
+        await init();
+        
+        const engine = new WasmEngine();
+        
+        const runBtn = document.getElementById('run-btn');
+        const plotBtn = document.getElementById('plot-btn');
+        const editor = document.getElementById('editor');
+        const outputContainer = document.getElementById('output-container');
+        
+        function renderMatrixTable(matrix) {
+          const table = document.createElement('table');
+          table.className = 'matrix-table';
+          for (let row of matrix) {
+            const tr = document.createElement('tr');
+            for (let val of row) {
+              const td = document.createElement('td');
+              td.textContent = Number(val).toFixed(4);
+              tr.appendChild(td);
+            }
+            table.appendChild(tr);
+          }
+          return table;
+        }
+
+        runBtn.addEventListener('click', () => {
+          const code = editor.value;
+          if (!code.trim()) return;
+          
+          try {
+            outputContainer.innerHTML = ''; // Clear
+            const resultStr = engine.eval(code);
+            
+            if (resultStr && resultStr.startsWith('[')) {
+              lastResultData = JSON.parse(resultStr);
+              
+              if (Array.isArray(lastResultData) && Array.isArray(lastResultData[0])) {
+                // 2D Matrix
+                const p = document.createElement('div');
+                p.textContent = `2D Matrix evaluated (Shape: ${lastResultData.length}x${lastResultData[0].length}):`;
+                p.style.color = '#8b949e';
+                outputContainer.appendChild(p);
+                outputContainer.appendChild(renderMatrixTable(lastResultData));
+              } else {
+                // 1D Array
+                const raw = document.createElement('div');
+                raw.id = 'raw-output';
+                raw.textContent = "1D Tensor: " + resultStr;
+                outputContainer.appendChild(raw);
+              }
+            } else {
+              lastResultData = null;
+              const raw = document.createElement('div');
+              raw.id = 'raw-output';
+              raw.textContent = resultStr || "Null";
+              outputContainer.appendChild(raw);
+            }
+          } catch (err) {
+            outputContainer.innerHTML = `<div id="raw-output" style="color: #ff7b72">Error: ${err}</div>`;
+          }
+        });
+
+        plotBtn.addEventListener('click', () => {
+          if (!lastResultData) {
+            alert("No vector data to plot! Evaluate a script first.");
+            return;
+          }
+          
+          // Flatten if 2D
+          let data = lastResultData;
+          if (Array.isArray(data[0])) {
+            data = data.flat();
+          }
+
+          // Render canvas
+          let canvas = document.getElementById('plot-canvas');
+          if (!canvas) {
+            canvas = document.createElement('canvas');
+            canvas.id = 'plot-canvas';
+            outputContainer.appendChild(canvas);
+          }
+
+          if (chartInstance) {
+            chartInstance.destroy();
+          }
+
+          const labels = Array.from({length: data.length}, (_, i) => i);
+          
+          chartInstance = new Chart(canvas, {
+            type: 'line',
+            data: {
+              labels: labels,
+              datasets: [{
+                label: 'Tensor Vector Data',
+                data: data,
+                borderColor: '#00f2fe',
+                tension: 0.1,
+                borderWidth: 2,
+                pointRadius: 0
+              }]
+            },
+            options: {
+              responsive: true,
+              scales: {
+                y: { grid: { color: '#30363d' }, ticks: { color: '#8b949e' } },
+                x: { grid: { color: '#30363d' }, ticks: { color: '#8b949e' } }
+              },
+              plugins: {
+                legend: { labels: { color: '#c9d1d9' } }
+              }
+            }
+          });
+        });
+      }
+      
+      run();
+    </script>
+  </body>
+</html>

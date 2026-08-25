@@ -276,7 +276,13 @@
         <p>The OpenMat Native CLI Engine is currently available for macOS. The Web IDE and VS Code Extension run flawlessly on all platforms.</p>
         <p><strong>macOS Native Installer:</strong></p>
         <p>Download the official <code>.pkg</code> installer directly from our <a href="https://github.com/openmat/openmat/releases" target="_blank" style="color: var(--cyan);">GitHub Releases</a>.</p>
-        <p style="margin-top: 15px;"><strong>VS Code Extension (Windows / Mac / Linux):</strong></p>
+        <p style="margin-top: 15px;"><strong>Windows & Linux (Compile from Source):</strong></p>
+        <div class="install-code">
+          $ git clone https://github.com/openmat/openmat-core.git<br>
+          $ cd openmat-core/compiler<br>
+          $ cargo build --release
+        </div>
+        <p style="margin-top: 15px;"><strong>VS Code Extension (Syntax Highlighting):</strong></p>
         <div class="install-code">
           $ code --install-extension openmat-0.1.0.vsix
         </div>

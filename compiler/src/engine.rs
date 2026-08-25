@@ -407,6 +407,26 @@ impl Engine {
                     let sum: f64 = (0..len).map(|i| evaluated.get_val(i)).sum();
                     
                     Ok(NdArray::scalar(sum / (len as f64)))
+                } else if name == "max" {
+                    let len = evaluated.len();
+                    if len == 0 { return Ok(NdArray::scalar(0.0)); }
+                    
+                    let mut max_val = f64::NEG_INFINITY;
+                    for i in 0..len {
+                        let v = evaluated.get_val(i);
+                        if v > max_val { max_val = v; }
+                    }
+                    Ok(NdArray::scalar(max_val))
+                } else if name == "min" {
+                    let len = evaluated.len();
+                    if len == 0 { return Ok(NdArray::scalar(0.0)); }
+                    
+                    let mut min_val = f64::INFINITY;
+                    for i in 0..len {
+                        let v = evaluated.get_val(i);
+                        if v < min_val { min_val = v; }
+                    }
+                    Ok(NdArray::scalar(min_val))
                 } else if name == "transpose" {
                     if evaluated.shape.len() == 2 {
                         let rows = evaluated.shape[0];
@@ -432,7 +452,7 @@ impl Engine {
                     } else {
                         Ok(evaluated)
                     }
-                } else if name == "sin" || name == "cos" || name == "tan" || name == "log" || name == "exp" || name == "sqrt" || name == "relu" || name == "sigmoid" {
+                } else if name == "sin" || name == "cos" || name == "tan" || name == "log" || name == "exp" || name == "sqrt" || name == "relu" || name == "sigmoid" || name == "abs" {
                     let map_fn = |i: usize| -> f64 {
                         let v = evaluated.get_val(i);
                         match name.as_str() {
@@ -442,6 +462,7 @@ impl Engine {
                             "log" => v.ln(),
                             "exp" => v.exp(),
                             "sqrt" => v.sqrt(),
+                            "abs" => v.abs(),
                             "relu" => if v > 0.0 { v } else { 0.0 },
                             "sigmoid" => 1.0 / (1.0 + (-v).exp()),
                             _ => unreachable!(),

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>OpenMat WebAssembly IDE</title>
+  <title>OpenMat: The Native Math Engine</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     :root {
@@ -27,276 +27,335 @@
       flex-direction: column;
       overflow: hidden;
     }
-    
-    header {
+
+    /* Top Navigation Tabs */
+    .top-nav {
       display: flex;
-      align-items: center;
-      padding: 15px 30px;
-      background: rgba(13, 17, 23, 0.9);
+      background: rgba(13, 17, 23, 0.95);
       border-bottom: 1px solid var(--border);
       backdrop-filter: blur(10px);
-      z-index: 10;
+      z-index: 20;
+      padding: 0 30px;
     }
-    
-    header h1 {
-      margin: 0;
-      font-size: 1.8rem;
-      background: linear-gradient(90deg, var(--cyan), var(--blue));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+
+    .nav-brand {
       display: flex;
       align-items: center;
+      padding: 10px 0;
+      margin-right: 40px;
     }
-    
-    header p {
-      margin: 0 0 0 20px;
+    .nav-brand img { height: 35px; margin-right: 15px; }
+    .nav-brand h1 { 
+      margin: 0; font-size: 1.4rem; 
+      background: linear-gradient(90deg, var(--cyan), var(--blue));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+
+    .nav-tabs {
+      display: flex;
+      gap: 5px;
+    }
+
+    .nav-tab {
+      padding: 20px 25px;
+      font-size: 1rem;
+      font-weight: bold;
       color: #8b949e;
-      font-size: 0.9rem;
-      border-left: 1px solid var(--border);
-      padding-left: 20px;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      transition: all 0.2s;
     }
+    .nav-tab:hover { color: var(--text); }
+    .nav-tab.active { color: var(--cyan); border-bottom-color: var(--cyan); background: rgba(0, 242, 254, 0.05); }
+
+    /* Page Containers */
+    .page-container {
+      flex: 1;
+      display: none;
+      overflow-y: auto;
+    }
+    .page-container.active { display: flex; }
+
+    /* --- HOME PAGE STYLES --- */
+    #home-page {
+      flex-direction: column;
+      align-items: center;
+      padding: 60px 20px;
+      background: radial-gradient(circle at top, #161b22 0%, var(--bg) 100%);
+    }
+
+    .hero { text-align: center; max-width: 800px; margin-bottom: 60px; }
+    .hero h2 { font-size: 3.5rem; margin: 0 0 20px; color: #fff; }
+    .hero p { font-size: 1.2rem; color: #8b949e; line-height: 1.6; }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      max-width: 1000px;
+      width: 100%;
+    }
+
+    .info-card {
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 30px;
+    }
+    .info-card h3 { color: var(--accent); margin-top: 0; font-size: 1.4rem; }
+    .info-card p, .info-card li { color: #8b949e; line-height: 1.6; font-size: 1rem; }
+    
+    .install-code {
+      background: #010409;
+      padding: 15px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font-family: monospace;
+      color: #a5d6ff;
+      margin-top: 15px;
+    }
+
+    /* --- IDE STYLES --- */
+    #ide-page {
+      flex: 1;
+      overflow: hidden;
+      display: none;
+    }
+    #ide-page.active { display: flex; } /* Override for grid/flex */
 
     .workspace {
       display: flex;
       flex: 1;
-      overflow: hidden;
+      width: 100%;
     }
 
-    /* Left Sidebar: Documentation */
     .sidebar {
-      width: 320px;
+      width: 300px;
       background: var(--bg-panel);
       border-right: 1px solid var(--border);
       padding: 20px;
       overflow-y: auto;
     }
+    .sidebar h2 { font-size: 1.1rem; margin-top: 0; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 10px; }
     
-    .sidebar h2 { font-size: 1.2rem; color: var(--text); margin-top: 0; }
-    .doc-section { margin-bottom: 25px; }
-    .doc-section h3 { font-size: 0.9rem; color: var(--accent); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
-    .doc-section p { font-size: 0.9rem; color: #8b949e; line-height: 1.5; margin: 0 0 10px 0; }
-    .code-snippet {
-      background: #000;
-      padding: 8px 12px;
-      border-radius: 6px;
-      font-family: monospace;
-      font-size: 0.85rem;
-      color: #a5d6ff;
-      border: 1px solid var(--border);
-      margin-bottom: 10px;
-    }
+    .doc-section { margin-bottom: 20px; }
+    .doc-section h3 { font-size: 0.9rem; color: var(--accent); margin-bottom: 5px; }
+    .code-snippet { background: #000; padding: 8px; border-radius: 6px; font-family: monospace; font-size: 0.8rem; color: #a5d6ff; border: 1px solid var(--border); }
 
-    /* Middle Panel: Editor */
     .main-panel {
       flex: 1;
       display: flex;
       flex-direction: column;
-      padding: 20px;
+      padding: 15px;
       background: radial-gradient(circle at center, #161b22 0%, var(--bg) 100%);
     }
 
-    .toolbar {
+    /* 10x Showcase Toolbar */
+    .toolbar-wrapper {
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 15px;
+    }
+    
+    .toolbar-title { font-size: 0.8rem; color: #8b949e; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; font-weight: bold; }
+
+    .toolbar-showcases {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
+      gap: 8px;
       margin-bottom: 15px;
-      background: var(--bg-panel);
-      padding: 10px;
-      border-radius: 8px;
-      border: 1px solid var(--border);
+    }
+
+    .toolbar-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      border-top: 1px solid var(--border);
+      padding-top: 12px;
     }
 
     .btn {
       background: rgba(88, 166, 255, 0.1);
       color: var(--accent);
       border: 1px solid rgba(88, 166, 255, 0.3);
-      padding: 6px 14px;
+      padding: 6px 12px;
       border-radius: 6px;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       cursor: pointer;
       transition: all 0.2s;
     }
     .btn:hover { background: rgba(88, 166, 255, 0.2); box-shadow: 0 0 10px rgba(88, 166, 255, 0.3); }
 
-    .btn-run { background: #238636; color: white; border-color: #2ea043; font-weight: bold; }
+    .btn-run { background: #238636; color: white; border-color: #2ea043; font-weight: bold; padding: 8px 16px; font-size: 0.9rem;}
     .btn-run:hover { background: #2ea043; box-shadow: 0 0 15px rgba(46, 160, 67, 0.4); }
 
-    .btn-plot { background: #1f6feb; color: white; border-color: #388bfd; font-weight: bold; }
+    .btn-plot { background: #1f6feb; color: white; border-color: #388bfd; font-weight: bold; padding: 8px 16px; font-size: 0.9rem;}
     .btn-plot:hover { background: #388bfd; box-shadow: 0 0 15px rgba(56, 139, 253, 0.4); }
 
     .editor-container {
       flex: 1;
       display: flex;
-      border-radius: 12px;
+      border-radius: 10px;
       overflow: hidden;
       border: 1px solid var(--border);
       box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     }
-
     #editor {
-      width: 100%;
-      height: 100%;
-      background-color: #010409;
-      color: #e6edf3;
-      border: none;
-      padding: 20px;
-      font-size: 1.1rem;
-      font-family: 'JetBrains Mono', 'Courier New', monospace;
-      outline: none;
-      resize: none;
+      width: 100%; height: 100%; background: #010409; color: #e6edf3; border: none; padding: 20px;
+      font-size: 1.1rem; font-family: 'JetBrains Mono', 'Courier New', monospace; outline: none; resize: none;
     }
-    #editor:focus { box-shadow: inset 0 0 0 1px var(--accent); }
 
-    /* Right Panel: Output & Charts */
     .right-panel {
-      width: 400px;
+      width: 380px;
       background: var(--bg-panel);
       border-left: 1px solid var(--border);
       display: flex;
       flex-direction: column;
     }
-
-    .output-header {
-      padding: 15px 20px;
-      border-bottom: 1px solid var(--border);
-      font-size: 0.9rem;
-      font-weight: bold;
-      color: var(--text);
-      background: rgba(0,0,0,0.2);
-    }
-
-    .output-content {
-      flex: 1;
-      padding: 20px;
-      overflow-y: auto;
-      font-family: monospace;
-      font-size: 0.9rem;
-    }
-
+    .output-header { padding: 15px; border-bottom: 1px solid var(--border); font-size: 0.9rem; font-weight: bold; background: rgba(0,0,0,0.2); }
+    .output-content { flex: 1; padding: 15px; overflow-y: auto; font-family: monospace; font-size: 0.85rem; }
+    
     #raw-output { color: #79c0ff; word-break: break-all; margin-bottom: 20px; }
     .error-text { color: #ff7b72; }
-    
-    canvas {
-      background: #010409;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      margin-top: 10px;
-      width: 100%;
-    }
+    canvas { background: #010409; border-radius: 8px; border: 1px solid var(--border); width: 100%; margin-top: 10px; }
 
-    /* Scrollbars */
+    /* Scrollbars & Toasts */
     ::-webkit-scrollbar { width: 8px; height: 8px; }
     ::-webkit-scrollbar-track { background: var(--bg); }
     ::-webkit-scrollbar-thumb { background: #484f58; border-radius: 4px; }
-    ::-webkit-scrollbar-thumb:hover { background: #6e7681; }
-
-    /* Toast */
+    
     #toast {
-      visibility: hidden;
-      min-width: 250px;
-      background-color: rgba(22, 27, 34, 0.9);
-      color: #ff7b72;
-      text-align: center;
-      border: 1px solid #ff7b72;
-      border-radius: 8px;
-      padding: 16px;
-      position: fixed;
-      z-index: 1000;
-      left: 50%;
-      bottom: 30px;
-      transform: translateX(-50%);
-      backdrop-filter: blur(10px);
-      box-shadow: 0 4px 15px rgba(255, 123, 114, 0.2);
-      opacity: 0;
-      transition: opacity 0.5s, bottom 0.5s;
+      visibility: hidden; min-width: 250px; background: rgba(22, 27, 34, 0.9);
+      color: #ff7b72; text-align: center; border: 1px solid #ff7b72; border-radius: 8px; padding: 16px;
+      position: fixed; z-index: 1000; left: 50%; bottom: 30px; transform: translateX(-50%);
+      backdrop-filter: blur(10px); opacity: 0; transition: opacity 0.5s, bottom 0.5s;
     }
     #toast.show { visibility: visible; opacity: 1; bottom: 50px; }
-    
-    .matrix-table {
-      border-collapse: collapse;
-      width: 100%;
-      color: #e6edf3;
-      font-size: 0.8rem;
-    }
-    .matrix-table td { border: 1px solid var(--border); padding: 6px; text-align: right; }
-    .matrix-table tr:nth-child(even) { background-color: #161b22; }
 
+    .matrix-table { border-collapse: collapse; width: 100%; color: #e6edf3; font-size: 0.8rem; }
+    .matrix-table td { border: 1px solid var(--border); padding: 4px; text-align: right; }
+    .matrix-table tr:nth-child(even) { background-color: #161b22; }
   </style>
 </head>
 <body>
 
-  <header>
-    <h1>
-      <img src="../assets/logo.png" style="height:40px; margin-right:15px;" alt="Logo">
-      OpenMat Web UI
-    </h1>
-    <p>Premium Native WebAssembly IDE</p>
-  </header>
+  <!-- Navigation -->
+  <nav class="top-nav">
+    <div class="nav-brand">
+      <img src="../assets/logo.png" alt="Logo">
+      <h1>OpenMat</h1>
+    </div>
+    <div class="nav-tabs">
+      <div class="nav-tab active" onclick="switchTab('home')">Home & Docs</div>
+      <div class="nav-tab" onclick="switchTab('ide')">Real-Time Web IDE</div>
+    </div>
+  </nav>
 
-  <div class="workspace">
-    <!-- Left Sidebar: Documentation -->
-    <aside class="sidebar">
-      <h2>Language Reference</h2>
+  <!-- HOME PAGE TAB -->
+  <div id="home-page" class="page-container active">
+    <div class="hero">
+      <h2>The Native Math Engine</h2>
+      <p>OpenMat is a high-performance mathematical scripting language powered by a native Rust engine. It compiles directly into WebAssembly, allowing complex calculus and matrix algebra to run instantly anywhere.</p>
+    </div>
+
+    <div class="info-grid">
+      <div class="info-card">
+        <h3>🚀 What is OpenMat?</h3>
+        <p>A specialized syntax tree for deep mathematical operations. It natively supports:</p>
+        <ul>
+          <li><strong>Element-wise Tensor Math</strong> across multi-dimensional arrays</li>
+          <li><strong>Linear Algebra</strong> (`@` Dot Products, Matrix Transpositions)</li>
+          <li><strong>Autograd</strong> (Reverse-mode backpropagation for ML)</li>
+        </ul>
+      </div>
+
+      <div class="info-card">
+        <h3>💻 Installation</h3>
+        <p>Download the native macOS desktop engine and the Visual Studio Code extension to run `.om` files instantly.</p>
+        <div class="install-code">
+          $ curl -L https://openmat.dev/install.sh | bash<br>
+          $ code --install-extension openmat-0.1.0.vsix
+        </div>
+      </div>
+
+      <div class="info-card">
+        <h3>🌍 Mission & Vision</h3>
+        <p>Our vision is to build an entirely open-source, highly parallelized ecosystem to rival legacy systems like MATLAB. By leveraging Rust and WebAssembly, we bring compute-heavy ML algorithms directly to the browser.</p>
+      </div>
+
+      <div class="info-card">
+        <h3>🛠️ Contribute</h3>
+        <p>OpenMat is actively looking for contributors! Our roadmap includes:</p>
+        <ul>
+          <li>Native File I/O (`csvread` / `csvwrite`)</li>
+          <li>Pandas-style `DataFrames`</li>
+          <li>3D WebGL plotting implementations</li>
+        </ul>
+        <p><a href="https://github.com/openmat" target="_blank" style="color: var(--cyan);">View on GitHub</a></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- IDE PAGE TAB -->
+  <div id="ide-page" class="page-container">
+    <div class="workspace">
       
-      <div class="doc-section">
-        <h3>Arrays & Matrices</h3>
-        <p>Define arrays and nested matrices cleanly.</p>
-        <div class="code-snippet">A = [1.0, 2.0, 3.0];<br>B = [[1.0, 2.0], [3.0, 4.0]];</div>
-      </div>
+      <aside class="sidebar">
+        <h2>Language Reference</h2>
+        <div class="doc-section">
+          <h3>Arrays</h3>
+          <div class="code-snippet">A = [1.0, 2.0];<br>B = [[1.0], [2.0]];</div>
+        </div>
+        <div class="doc-section">
+          <h3>Math</h3>
+          <div class="code-snippet">Y = sin(X) + abs(X);</div>
+        </div>
+        <div class="doc-section">
+          <h3>Matrix Alg</h3>
+          <div class="code-snippet">Z = A @ B;</div>
+        </div>
+        <div class="doc-section">
+          <h3>Autograd</h3>
+          <div class="code-snippet">backward(Loss);</div>
+        </div>
+      </aside>
 
-      <div class="doc-section">
-        <h3>Array Generators</h3>
-        <p>Use built-in functions to generate arrays instantly.</p>
-        <div class="code-snippet">X = linspace([-10.0, 10.0, 100]);</div>
-      </div>
+      <main class="main-panel">
+        <div class="toolbar-wrapper">
+          <div class="toolbar-title">10x Showcase Gallery (Click to Inject)</div>
+          <div class="toolbar-showcases">
+            <button class="btn" id="demo-1">1. Sine Wave</button>
+            <button class="btn" id="demo-2">2. Tangent Wave</button>
+            <button class="btn" id="demo-3">3. Log Curve</button>
+            <button class="btn" id="demo-4">4. Sigmoid Curve</button>
+            <button class="btn" id="demo-5">5. Absolute Value</button>
+            <button class="btn" id="demo-6">6. Matrix Math</button>
+            <button class="btn" id="demo-7">7. Vector Dot</button>
+            <button class="btn" id="demo-8">8. Statistics</button>
+            <button class="btn" id="demo-9">9. Autograd NN</button>
+            <button class="btn" id="demo-10">10. Benchmark</button>
+          </div>
+          <div class="toolbar-actions">
+            <button class="btn btn-plot" id="plot-btn">Render 2D Chart</button>
+            <button class="btn btn-run" id="run-btn">Execute WebAssembly</button>
+          </div>
+        </div>
+        <div class="editor-container">
+          <textarea id="editor" spellcheck="false">// Welcome to the OpenMat Real-Time Web IDE!
+// Click any of the 10 showcases above to test the engine.</textarea>
+        </div>
+      </main>
 
-      <div class="doc-section">
-        <h3>Element-wise Math</h3>
-        <p>Mathematical operators and trig functions are inherently vectorized across arrays.</p>
-        <div class="code-snippet">Y = sin(X) + cos(X);</div>
-      </div>
+      <aside class="right-panel">
+        <div class="output-header">Execution Console</div>
+        <div class="output-content" id="output-container">
+          <div id="raw-output" style="color:#8b949e">Awaiting execution...</div>
+        </div>
+      </aside>
 
-      <div class="doc-section">
-        <h3>Linear Algebra</h3>
-        <p>Use the `@` operator for dot products and matrix multiplication, and `transpose()` to swap axes.</p>
-        <div class="code-snippet">Z = A @ transpose(B);</div>
-      </div>
-
-      <div class="doc-section">
-        <h3>Autograd (Neural Nets)</h3>
-        <p>Use backwards propagation natively for training networks.</p>
-        <div class="code-snippet">backward(Loss);</div>
-      </div>
-    </aside>
-
-    <!-- Main Editor -->
-    <main class="main-panel">
-      <div class="toolbar">
-        <button class="btn" id="demo-sine">Sine Wave Plot</button>
-        <button class="btn" id="demo-sigmoid">Sigmoid Activation</button>
-        <button class="btn" id="demo-matrix">Matrix Math</button>
-        <button class="btn" id="demo-benchmark">Calculus Benchmark</button>
-        <div style="flex: 1;"></div>
-        <button class="btn btn-plot" id="plot-btn">Render Chart</button>
-        <button class="btn btn-run" id="run-btn">Execute Compute (WASM)</button>
-      </div>
-      <div class="editor-container">
-        <textarea id="editor" spellcheck="false">// Welcome to OpenMat Web IDE!
-// Click a Showcase button above to begin.
-
-X = linspace([-10.0, 10.0, 100]);
-Y = sin(X);
-Y</textarea>
-      </div>
-    </main>
-
-    <!-- Right Output -->
-    <aside class="right-panel">
-      <div class="output-header">Execution Output</div>
-      <div class="output-content" id="output-container">
-        <div id="raw-output" style="color:#8b949e">Ready to execute.</div>
-      </div>
-    </aside>
+    </div>
   </div>
 
   <div id="toast"></div>
@@ -304,6 +363,20 @@ Y</textarea>
   <script type="module">
     import init, { WasmEngine } from './pkg/openmat_core.js';
     
+    // Tab Switching Logic
+    window.switchTab = function(tabName) {
+      document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.page-container').forEach(p => p.classList.remove('active'));
+      
+      if (tabName === 'home') {
+        document.querySelectorAll('.nav-tab')[0].classList.add('active');
+        document.getElementById('home-page').classList.add('active');
+      } else {
+        document.querySelectorAll('.nav-tab')[1].classList.add('active');
+        document.getElementById('ide-page').classList.add('active');
+      }
+    };
+
     let lastResultData = null;
     let chartInstance = null;
     let engine = null;
@@ -317,32 +390,24 @@ Y</textarea>
       setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
     }
 
-    async function run() {
+    async function setupIDE() {
       await init();
       engine = new WasmEngine();
       
-      const runBtn = document.getElementById('run-btn');
-      const plotBtn = document.getElementById('plot-btn');
       const editor = document.getElementById('editor');
-      const outputContainer = document.getElementById('output-container');
       
-      // Demos
-      document.getElementById('demo-sine').addEventListener('click', () => {
-        editor.value = "// 2D Sine Wave Plot Showcase\nX = linspace([-10.0, 10.0, 200]);\nY = sin(X) + (cos(X * 2.0) / 2.0);\nY";
-      });
+      // 10x Showcases
+      document.getElementById('demo-1').onclick = () => editor.value = "// 1. Sine Wave\nX = linspace([-10.0, 10.0, 200]);\nY = sin(X);\nY";
+      document.getElementById('demo-2').onclick = () => editor.value = "// 2. Tangent Wave\nX = linspace([-5.0, 5.0, 200]);\nY = tan(X);\nY";
+      document.getElementById('demo-3').onclick = () => editor.value = "// 3. Logarithmic Curve\nX = linspace([1.0, 10.0, 200]);\nY = log(X);\nY";
+      document.getElementById('demo-4').onclick = () => editor.value = "// 4. Sigmoid Activation\nX = linspace([-10.0, 10.0, 200]);\nY = sigmoid(X);\nY";
+      document.getElementById('demo-5').onclick = () => editor.value = "// 5. Absolute Value V-Curve\nX = linspace([-10.0, 10.0, 200]);\nY = abs(X);\nY";
+      document.getElementById('demo-6').onclick = () => editor.value = "// 6. 2D Matrix Dot Multiplication\nA = [[1.0, 2.0], [3.0, 4.0]];\nB = [[5.0, 6.0], [7.0, 8.0]];\nC = A @ B;\nC";
+      document.getElementById('demo-7').onclick = () => editor.value = "// 7. 1D Vector Dot Product\nA = [1.0, 2.0, 3.0];\nB = [4.0, 5.0, 6.0];\nDotProduct = A @ B;\nDotProduct";
+      document.getElementById('demo-8').onclick = () => editor.value = "// 8. Statistical Reductions\nX = [1.5, 9.2, 4.1, 7.8, 3.3];\nMaxVal = max(X);\nMinVal = min(X);\nMeanVal = mean(X);\n\nprint(\"Max:\");\nprint(MaxVal);\nprint(\"Min:\");\nprint(MinVal);\nprint(\"Mean:\");\nprint(MeanVal);";
+      document.getElementById('demo-9').onclick = () => editor.value = "// 9. Autograd Neural Network\nWeights = [0.1, 0.5, -0.2];\nInput = [2.0, 1.0, 0.1];\n\nZ = sum(Weights * Input);\nPrediction = sigmoid(Z);\n\nLoss = (Prediction - 1.0) * (Prediction - 1.0);\nbackward(Loss);\n\nPrediction";
+      document.getElementById('demo-10').onclick = () => editor.value = "// 10. Element-wise Calculus Benchmark\nA = linspace([1.0, 100.0, 250000]);\n\ntic(0);\nB = exp(A / 100.0) * cos(A) + abs(A);\ntoc(0);\n\nprint(\"Benchmark completed.\");";
 
-      document.getElementById('demo-sigmoid').addEventListener('click', () => {
-        editor.value = "// Neural Network Activation Curve\nX = linspace([-10.0, 10.0, 200]);\nY = sigmoid(X);\nY";
-      });
-      
-      document.getElementById('demo-matrix').addEventListener('click', () => {
-        editor.value = "// Native Linear Algebra\nA = [[1.0, 2.0], [3.0, 4.0]];\nB = [[5.0, 6.0], [7.0, 8.0]];\n\nC = A @ B;\nC";
-      });
-      
-      document.getElementById('demo-benchmark').addEventListener('click', () => {
-        editor.value = "// High-Performance Element-wise Calculus\nA = linspace([1.0, 100.0, 250000]);\n\ntic(0);\nB = exp(A / 100.0) * cos(A);\ntoc(0);\n\nprint(\"Done!\");";
-      });
-      
       function renderMatrixTable(matrix) {
         const table = document.createElement('table');
         table.className = 'matrix-table';
@@ -358,66 +423,64 @@ Y</textarea>
         return table;
       }
 
-      runBtn.addEventListener('click', () => {
+      document.getElementById('run-btn').addEventListener('click', () => {
         const code = editor.value;
         if (!code.trim()) return;
+        const container = document.getElementById('output-container');
         
         try {
-          outputContainer.innerHTML = '';
+          container.innerHTML = '';
           const resultStr = engine.eval(code);
           
           if (resultStr && resultStr.startsWith('[')) {
             lastResultData = JSON.parse(resultStr);
-            
             if (Array.isArray(lastResultData) && Array.isArray(lastResultData[0])) {
               const p = document.createElement('div');
-              p.textContent = `2D Matrix evaluated (Shape: ${lastResultData.length}x${lastResultData[0].length}):`;
-              p.style.color = '#8b949e';
-              p.style.marginBottom = '10px';
-              outputContainer.appendChild(p);
-              outputContainer.appendChild(renderMatrixTable(lastResultData));
+              p.textContent = `2D Matrix (Shape: ${lastResultData.length}x${lastResultData[0].length}):`;
+              p.style.color = '#8b949e'; p.style.marginBottom = '10px';
+              container.appendChild(p);
+              container.appendChild(renderMatrixTable(lastResultData));
             } else {
               const raw = document.createElement('div');
               raw.id = 'raw-output';
               raw.textContent = "1D Tensor: " + resultStr.substring(0, 500) + (resultStr.length > 500 ? "..." : "");
-              outputContainer.appendChild(raw);
+              container.appendChild(raw);
             }
           } else {
             lastResultData = null;
             const raw = document.createElement('div');
             raw.id = 'raw-output';
             raw.textContent = resultStr || "Null";
-            outputContainer.appendChild(raw);
+            container.appendChild(raw);
           }
         } catch (err) {
-          outputContainer.innerHTML = `<div id="raw-output" class="error-text">Parse Error:<br><br>${err.replace(/\n/g, '<br>')}</div>`;
+          container.innerHTML = `<div id="raw-output" class="error-text">Parse Error:<br><br>${err.replace(/\n/g, '<br>')}</div>`;
           showToast("Compilation failed!");
         }
       });
 
-      plotBtn.addEventListener('click', () => {
+      document.getElementById('plot-btn').addEventListener('click', () => {
         if (!lastResultData) {
-          showToast("No vector data to plot! Execute a valid tensor array first.");
+          showToast("No vector data to plot! Execute a valid array first.");
           return;
         }
         
         let data = lastResultData;
-        if (Array.isArray(data[0])) {
-          data = data.flat();
-        }
+        if (Array.isArray(data[0])) data = data.flat();
 
+        const container = document.getElementById('output-container');
         let canvas = document.getElementById('plot-canvas');
         if (!canvas) {
           canvas = document.createElement('canvas');
           canvas.id = 'plot-canvas';
-          outputContainer.appendChild(canvas);
+          container.appendChild(canvas);
         }
 
-        if (chartInstance) { chartInstance.destroy(); }
+        if (chartInstance) chartInstance.destroy();
 
         const labels = Array.from({length: data.length}, (_, i) => i);
         const ctx = canvas.getContext('2d');
-        let gradient = ctx.createLinearGradient(0, 0, 0, 300);
+        let gradient = ctx.createLinearGradient(0, 0, 0, 250);
         gradient.addColorStop(0, 'rgba(0, 242, 254, 0.6)');
         gradient.addColorStop(1, 'rgba(79, 172, 254, 0.0)');
         
@@ -426,35 +489,22 @@ Y</textarea>
           data: {
             labels: labels,
             datasets: [{
-              label: 'Tensor Vector Data',
-              data: data,
-              borderColor: '#00f2fe',
-              backgroundColor: gradient,
-              fill: true,
-              tension: 0.4,
-              borderWidth: 2,
-              pointBackgroundColor: '#4facfe',
-              pointRadius: 0,
-              pointHoverRadius: 4
+              label: 'Tensor Vector Data', data: data, borderColor: '#00f2fe',
+              backgroundColor: gradient, fill: true, tension: 0.4, borderWidth: 2,
+              pointBackgroundColor: '#4facfe', pointRadius: 0, pointHoverRadius: 4
             }]
           },
           options: {
             responsive: true,
-            plugins: {
-              legend: { labels: { color: '#c9d1d9' } }
-            },
-            scales: {
-              x: { display: false },
-              y: { ticks: { color: '#8b949e' }, grid: { color: '#30363d' } }
-            }
+            plugins: { legend: { labels: { color: '#c9d1d9' } } },
+            scales: { x: { display: false }, y: { ticks: { color: '#8b949e' }, grid: { color: '#30363d' } } }
           }
         });
-        
         showToast("Chart rendered successfully!", true);
       });
     }
 
-    run();
+    setupIDE();
   </script>
 </body>
 </html>

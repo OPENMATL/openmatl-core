@@ -136,10 +136,34 @@
         color: #79c0ff;
         word-break: break-all;
       }
+      #toast {
+        visibility: hidden;
+        min-width: 250px;
+        background-color: rgba(22, 27, 34, 0.9);
+        color: #ff7b72;
+        text-align: center;
+        border: 1px solid #ff7b72;
+        border-radius: 8px;
+        padding: 16px;
+        position: fixed;
+        z-index: 1000;
+        left: 50%;
+        bottom: 30px;
+        transform: translateX(-50%);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 4px 15px rgba(255, 123, 114, 0.2);
+        opacity: 0;
+        transition: opacity 0.5s, bottom 0.5s;
+      }
+      #toast.show {
+        visibility: visible;
+        opacity: 1;
+        bottom: 50px;
+      }
     </style>
   </head>
   <body>
-    <h1>OpenMat Web UI</h1>
+    <h1><img src="../assets/logo.png" style="height:50px; vertical-align:middle; margin-right:15px;" alt="Logo">OpenMat Web UI</h1>
     <p class="subtitle">WASM powered ML Matrix Environment</p>
     
     <div class="container">
@@ -159,6 +183,7 @@
         <div id="raw-output">Ready.</div>
       </div>
     </div>
+    <div id="toast"></div>
 
     <script type="module">
       import init, { WasmEngine } from './pkg/openmat_core.js';
@@ -176,12 +201,19 @@
         const editor = document.getElementById('editor');
         const outputContainer = document.getElementById('output-container');
         
+        function showToast(msg) {
+          const toast = document.getElementById("toast");
+          toast.textContent = msg;
+          toast.className = "show";
+          setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
+        }
+        
         document.getElementById('demo-matrix').addEventListener('click', () => {
-          editor.value = "// Native Matrix Math\nA = [1, 2; 3, 4];\nB = [5, 6; 7, 8];\nC = A @ B;\nC";
+          editor.value = "// Native Matrix Math\nA = [1.0, 2.0, 3.0, 4.0];\nB = [5.0, 6.0, 7.0, 8.0];\nC = A * B;\nC";
         });
         
         document.getElementById('demo-autograd').addEventListener('click', () => {
-          editor.value = "// Autograd and Neural Networks\nWeights = [0.1, 0.5, -0.2];\nInput = [2.0, 1.0, 0.1];\n\n// Forward Pass\nZ = Weights @ Input;\nPrediction = sigmoid(Z);\n\n// Loss\nLoss = (Prediction - 1.0) * (Prediction - 1.0);\nLoss.backward();\n\nPrediction";
+          editor.value = "// Autograd and Neural Networks\nWeights = [0.1, 0.5, -0.2];\nInput = [2.0, 1.0, 0.1];\n\n// Forward Pass\nZ = sum(Weights * Input);\nPrediction = sigmoid(Z);\n\n// Loss\nLoss = (Prediction - 1.0) * (Prediction - 1.0);\nbackward(Loss);\n\nPrediction";
         });
         
         document.getElementById('demo-benchmark').addEventListener('click', () => {
@@ -242,7 +274,7 @@
 
         plotBtn.addEventListener('click', () => {
           if (!lastResultData) {
-            alert("No vector data to plot! Evaluate a script first.");
+            showToast("No vector data to plot! Evaluate a script first.");
             return;
           }
           
@@ -265,6 +297,10 @@
           }
 
           const labels = Array.from({length: data.length}, (_, i) => i);
+          const ctx = canvas.getContext('2d');
+          let gradient = ctx.createLinearGradient(0, 0, 0, 400);
+          gradient.addColorStop(0, 'rgba(0, 242, 254, 0.5)');
+          gradient.addColorStop(1, 'rgba(79, 172, 254, 0.0)');
           
           chartInstance = new Chart(canvas, {
             type: 'line',
@@ -274,9 +310,13 @@
                 label: 'Tensor Vector Data',
                 data: data,
                 borderColor: '#00f2fe',
-                tension: 0.1,
+                backgroundColor: gradient,
+                fill: true,
+                tension: 0.4,
                 borderWidth: 2,
-                pointRadius: 0
+                pointBackgroundColor: '#4facfe',
+                pointRadius: 2,
+                pointHoverRadius: 5
               }]
             },
             options: {
